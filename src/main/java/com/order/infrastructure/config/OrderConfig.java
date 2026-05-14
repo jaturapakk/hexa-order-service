@@ -6,8 +6,8 @@ import com.order.application.ports.out.OrderRepository;
 import com.order.application.ports.out.UserRepository;
 import com.order.application.services.*;
 import com.order.infrastructure.adapters.out.messaging.ConsoleOrderEventPublisher;
-import com.order.infrastructure.adapters.out.persistence.InMemoryOrderRepository;
-import com.order.infrastructure.adapters.out.persistence.InMemoryUserRepository;
+import com.order.infrastructure.adapters.out.persistence.PostgresOrderRepository;
+import com.order.infrastructure.adapters.out.persistence.PostgresUserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Configuration;
 public class OrderConfig {
 
     @Bean
-    public OrderRepository orderRepository() {
-        return new InMemoryOrderRepository();
+    public OrderRepository orderRepository(PostgresOrderRepository postgresOrderRepository) {
+        return postgresOrderRepository;
     }
 
     @Bean
-    public UserRepository userRepository() {
-        return new InMemoryUserRepository();
+    public UserRepository userRepository(PostgresUserRepository postgresUserRepository) {
+        return postgresUserRepository;
     }
 
     @Bean

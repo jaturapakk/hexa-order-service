@@ -21,6 +21,15 @@ public class Order {
         this.createdAt = Instant.now();
     }
 
+    public Order(OrderId id, UserId userId, List<OrderItem> items, OrderStatus status, Money totalAmount, Instant createdAt) {
+        this.id = id;
+        this.userId = userId;
+        this.items = List.copyOf(items);
+        this.status = status;
+        this.totalAmount = totalAmount;
+        this.createdAt = createdAt;
+    }
+
     private Money calculateTotal(List<OrderItem> items) {
         return items.stream()
                 .map(OrderItem::total)
