@@ -4,6 +4,8 @@ import com.order.application.ports.in.CreateUserUseCase;
 import com.order.application.ports.out.UserRepository;
 import com.order.domain.model.User;
 import com.order.domain.model.UserId;
+import org.springframework.transaction.annotation.Transactional;
+
 
 public class CreateUserService implements CreateUserUseCase {
     private final UserRepository userRepository;
@@ -13,14 +15,16 @@ public class CreateUserService implements CreateUserUseCase {
     }
 
     @Override
+    @Transactional
     public UserId execute(Command command) {
+        UserId userId = UserId.generate();
         User user = new User(
-                UserId.generate(),
+                userId,
                 command.name(),
                 command.email(),
                 command.initialBalance()
         );
         userRepository.save(user);
-        return user.getId();
+        return userId;
     }
 }
