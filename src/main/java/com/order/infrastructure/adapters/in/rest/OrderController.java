@@ -27,7 +27,7 @@ public class OrderController {
 
     @PostMapping("/pay")
     public void payOrders(@Validated PayOrderRequest request){
-        payOrderUseCase.execute(new PayOrderUseCase.Command(new UserId(request.userId()), new ProductId(request.productId())));
+        payOrderUseCase.execute(new PayOrderUseCase.Command(new UserId(request.userId()), new OrderId(request.orderId())));
     }
 
     @PostMapping("/create")
@@ -41,7 +41,7 @@ public class OrderController {
         return new CreateOrderResponse(orderId);
     }
 
-    public record PayOrderRequest(UUID userId, UUID productId){}
+    public record PayOrderRequest(UUID userId, UUID orderId){}
     public record CreateOrderRequest(UUID userId, List<ProductItem> productItems){}
     public record ProductItem(UUID productId, Integer quantity){}
     public record CreateOrderResponse(OrderId orderId){}

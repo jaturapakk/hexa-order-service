@@ -26,6 +26,13 @@ public class Order {
                 .reduce(Money.ZERO, Money::add);
     }
 
+    public void pay(){
+        if (!this.status.equals(OrderStatus.PENDING)) {
+            throw new IllegalStateException("Order can only be paid when in PENDING state");
+        }
+        this.status = OrderStatus.PAID;
+    }
+
     public OrderId getOrderId() {
         return orderId;
     }
