@@ -1,12 +1,9 @@
 package com.order.domain.model;
 
 import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.UUID;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MoneyTest {
 
@@ -33,6 +30,13 @@ class MoneyTest {
     }
 
     @Test
+    void shouldMultiply() {
+        Money money = new Money(new BigDecimal("10.00"));
+        Money result = money.multiply(3);
+        assertEquals(new BigDecimal("30.00"), result.amount());
+    }
+
+    @Test
     void shouldCheckGreaterThanOrEqual() {
         Money m1 = new Money(new BigDecimal("10.00"));
         Money m2 = new Money(new BigDecimal("5.00"));
@@ -47,5 +51,17 @@ class MoneyTest {
     @Test
     void shouldHaveZeroConstant() {
         assertEquals(new BigDecimal("0.00"), Money.ZERO.amount());
+    }
+
+    @Test
+    void testEqualsAndHashCode() {
+        Money m1 = new Money(new BigDecimal("10.00"));
+        Money m2 = new Money(new BigDecimal("10.00"));
+        Money m3 = new Money(new BigDecimal("20.00"));
+
+        assertEquals(m1, m2);
+        assertEquals(m1.hashCode(), m2.hashCode());
+        assertNotEquals(m1, m3);
+        assertNotEquals(null, m1);
     }
 }

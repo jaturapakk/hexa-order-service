@@ -24,22 +24,22 @@ public class ProductController {
     }
 
     @PostMapping
-    public OrderResponse placeOrder(@RequestBody @Validated PlaceOrderRequest request){
+    public ProductPlacementResponse placeProducts(@RequestBody @Validated ProductPlacementBatchRequest request){
 
         List<PlaceProductUseCase.ComponentCommand> products = request.items.stream().map(
-                r -> new PlaceProductUseCase.ComponentCommand(ProductId.generate(),r.orderName, r.quantity, new Money(r.price()))
+                r -> new PlaceProductUseCase.ComponentCommand(ProductId.generate(), r.productName, r.quantity, new Money(r.price()))
         ).toList();
 
-        List<ProductId> productId = placeProductUseCase.execute(new PlaceProductUseCase.Command(
+        List<ProductId> productIds = placeProductUseCase.execute(new PlaceProductUseCase.Command(
                 new UserId(request.userId),
                 products
         ));
 
-        return new OrderResponse(productId.stream().map(ProductId::value).toList());
+        return new ProductPlacementResponse(productIds.stream().map(ProductId::value).toList());
     }
 
-    public record OrderResponse(List<UUID> productId){}
-    public record ItemRequest(String orderName, Integer quantity, BigDecimal price){}
-    public record PlaceOrderRequest(UUID userId, List<ItemRequest> items){}
+    public record ProductPlacementResponse(List<UUID> productIds){}
+    public record ProductPlacementRequest(String productName, Integer quantity, BigDecimal price){}
+    public record ProductPlacementBatchRequest(UUID userId, List<ProductPlacementRequest> items){}
 
 }

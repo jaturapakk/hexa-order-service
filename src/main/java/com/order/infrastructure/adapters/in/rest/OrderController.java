@@ -7,6 +7,7 @@ import com.order.domain.model.ProductId;
 import com.order.domain.model.UserId;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,12 +27,12 @@ public class OrderController {
     }
 
     @PostMapping("/pay")
-    public void payOrders(@Validated PayOrderRequest request){
+    public void payOrders(@RequestBody @Validated PayOrderRequest request){
         payOrderUseCase.execute(new PayOrderUseCase.Command(new UserId(request.userId()), new OrderId(request.orderId())));
     }
 
     @PostMapping("/create")
-    public CreateOrderResponse createOrder(@Validated CreateOrderRequest request){
+    public CreateOrderResponse createOrder(@RequestBody @Validated CreateOrderRequest request){
         OrderId orderId = createOrderUseCase.execute(new CreateOrderUseCase.Command(
                 new UserId(request.userId()),
                     request.productItems.stream().map(
