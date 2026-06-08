@@ -38,6 +38,20 @@ public class OrderPersistence implements OrderRepository {
 
     @Override
     public Optional<Order> findById(OrderId orderId) {
-        return Optional.empty();
+        return jpaOrderRepository.findById(orderId.value()).map(
+                entity -> new Order(
+                        new OrderId(entity.getId()),
+                        new UserId(entity.getUserId()),
+                        entity.getItems().stream().map(
+                                item -> new OrderItem(
+                                        new ProductId(item.getProductId()),
+                                        item.getQuantity(),
+                                        new Money(item.getPricePerUnit())
+                                )
+                        ).toList(),
+                        entity.getStatus(),
+                        entity.getCreatedAt()
+                )
+        );
     }
 }

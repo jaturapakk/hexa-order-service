@@ -9,5 +9,5 @@ import java.util.List;
 public interface CreateOrderUseCase {
     OrderId execute(Command command);
     record Command(UserId userId, List<CommandComponent> productItem){}
-    record CommandComponent(ProductId productId, Integer integer){}
+    record CommandComponent(ProductId productId, Integer quantity){}
 }

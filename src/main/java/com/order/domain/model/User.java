@@ -3,7 +3,7 @@ package com.order.domain.model;
 public class User {
     private final UserId userId;
     private final String userName;
-    private final Money balance;
+    private Money balance;
 
     public User(UserId userId, String userName, Money balance){
         this.userId = userId;
@@ -24,13 +24,13 @@ public class User {
     }
 
     public void addBalance(Money amount){
-        this.balance.add(amount);
+        this.balance = this.balance.add(amount);
     }
 
     public void deductBalance(Money amount){
         if(!this.balance.isGreaterThanOrEqual(amount)){
             throw new IllegalStateException("Insufficient balance for user");
         }
-        this.balance.subtract(amount);
+        this.balance = this.balance.subtract(amount);
     }
 }

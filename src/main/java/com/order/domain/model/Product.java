@@ -15,7 +15,10 @@ public class Product {
         this.userId = userId;
     }
 
-    public void payOrder(Integer quantity){
+    public void reduceStock(Integer quantity){
+        if (this.quantity < quantity) {
+            throw new IllegalStateException("Insufficient stock for product: " + productName);
+        }
         this.quantity = this.quantity - quantity;
     }
 

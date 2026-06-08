@@ -12,12 +12,16 @@ public class Order {
     private final Instant createdAt;
 
     public Order(OrderId orderId, UserId userId, List<OrderItem> items){
-        this.orderId =  orderId;
+        this(orderId, userId, items, OrderStatus.PENDING, Instant.now());
+    }
+
+    public Order(OrderId orderId, UserId userId, List<OrderItem> items, OrderStatus status, Instant createdAt) {
+        this.orderId = orderId;
         this.userId = userId;
-        this.status = OrderStatus.PENDING;
-        this.items =  items;
+        this.items = items;
+        this.status = status;
         this.totalAmount = calculateAmount(items);
-        this.createdAt = Instant.now();
+        this.createdAt = createdAt;
     }
 
     Money calculateAmount(List<OrderItem> items){

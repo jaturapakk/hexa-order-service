@@ -20,15 +20,22 @@ public class ProductPersistence implements ProductRepository {
     }
     @Override
     public void save(List<Product> products) {
-        List<ProductEntity> productEntities = products.stream().map(
-                product -> new ProductEntity(
-                        product.getProductId().value(),
-                        product.getProductName(),
-                        product.getPricePerUnit().amount(),
-                        product.getQuantity(),
-                        product.getUserId().value())
-        ).toList();
+        List<ProductEntity> productEntities = products.stream().map(this::mapToEntity).toList();
         jpaProductRepository.saveAll(productEntities);
+    }
+
+    @Override
+    public void save(Product product) {
+        jpaProductRepository.save(mapToEntity(product));
+    }
+
+    private ProductEntity mapToEntity(Product product) {
+        return new ProductEntity(
+                product.getProductId().value(),
+                product.getProductName(),
+                product.getPricePerUnit().amount(),
+                product.getQuantity(),
+                product.getUserId().value());
     }
 
     @Override

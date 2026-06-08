@@ -30,7 +30,7 @@ public class CreateOrderService implements CreateOrderUseCase {
         List<OrderItem> orderItems = command.productItem().stream().map(
                 p -> {
                     Product product = productRepository.findById(p.productId()).orElseThrow(() -> new IllegalStateException("product not found"));
-                    return new OrderItem(product.getProductId(), product.getQuantity(), product.getPricePerUnit());
+                    return new OrderItem(product.getProductId(), p.quantity(), product.getPricePerUnit());
                 }
         ).toList();
         Order order = new Order(OrderId.generate(), user.getUserId(), orderItems);

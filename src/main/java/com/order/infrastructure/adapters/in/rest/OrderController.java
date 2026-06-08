@@ -18,11 +18,11 @@ import java.util.UUID;
 public class OrderController {
 
     private final PayOrderUseCase payOrderUseCase;
-    private final CreateOrderUseCase shipOrderUseCase;
+    private final CreateOrderUseCase createOrderUseCase;
 
-    public OrderController(PayOrderUseCase payOrderUseCase, CreateOrderUseCase shipOrderUseCase){
+    public OrderController(PayOrderUseCase payOrderUseCase, CreateOrderUseCase createOrderUseCase){
         this.payOrderUseCase = payOrderUseCase;
-        this.shipOrderUseCase = shipOrderUseCase;
+        this.createOrderUseCase = createOrderUseCase;
     }
 
     @PostMapping("/pay")
@@ -32,7 +32,7 @@ public class OrderController {
 
     @PostMapping("/create")
     public CreateOrderResponse createOrder(@Validated CreateOrderRequest request){
-        OrderId orderId = shipOrderUseCase.execute(new CreateOrderUseCase.Command(
+        OrderId orderId = createOrderUseCase.execute(new CreateOrderUseCase.Command(
                 new UserId(request.userId()),
                     request.productItems.stream().map(
                             p -> new CreateOrderUseCase.CommandComponent(new ProductId(p.productId), p.quantity)
