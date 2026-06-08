@@ -1,32 +1,35 @@
 package com.order.domain.model;
 
 import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MoneyTest {
 
     @Test
-    void shouldAddMoney() {
-        Money m1 = new Money(new BigDecimal("10.00"));
-        Money m2 = new Money(new BigDecimal("5.50"));
-        Money result = m1.add(m2);
-        assertEquals(new BigDecimal("15.50"), result.amount());
+    void testInitialMoney(){
+        Money money = new Money(new BigDecimal("100.00"));
+        assertEquals(new BigDecimal("100.00"), money.amount());
     }
 
     @Test
-    void shouldSubtractMoney() {
-        Money m1 = new Money(new BigDecimal("10.00"));
-        Money m2 = new Money(new BigDecimal("5.50"));
-        Money result = m1.subtract(m2);
-        assertEquals(new BigDecimal("4.50"), result.amount());
+    void shouldAddMoney(){
+        Money money1 = new Money(new BigDecimal("20.00"));
+        Money money2 = new Money(new BigDecimal("20.00"));
+        Money result = money1.add(money2);
+        assertEquals(new BigDecimal("40.00"), result.amount());
     }
 
     @Test
-    void shouldMultiplyMoney() {
-        Money m1 = new Money(new BigDecimal("10.00"));
-        Money result = m1.multiply(3);
-        assertEquals(new BigDecimal("30.00"), result.amount());
+    void shouldSubtract(){
+        Money money1 = new Money(new BigDecimal("20.00"));
+        Money money2 = new Money(new BigDecimal("20.00"));
+        Money result = money1.subtract(money2);
+        assertEquals(new BigDecimal("0.00"), result.amount());
     }
 
     @Test

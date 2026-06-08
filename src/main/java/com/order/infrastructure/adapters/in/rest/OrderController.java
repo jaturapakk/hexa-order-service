@@ -1,50 +1,48 @@
 package com.order.infrastructure.adapters.in.rest;
 
-import com.order.application.ports.in.PlaceOrderUseCase;
-import com.order.domain.model.Money;
+import com.order.application.ports.in.PayOrderUseCase;
+import com.order.application.ports.in.CreateOrderUseCase;
 import com.order.domain.model.OrderId;
-import com.order.domain.model.OrderItem;
 import com.order.domain.model.ProductId;
 import com.order.domain.model.UserId;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
 
-    private final PlaceOrderUseCase placeOrderUseCase;
+    private final PayOrderUseCase payOrderUseCase;
+    private final CreateOrderUseCase shipOrderUseCase;
 
-    public OrderController(PlaceOrderUseCase placeOrderUseCase) {
-        this.placeOrderUseCase = placeOrderUseCase;
+    public OrderController(PayOrderUseCase payOrderUseCase, CreateOrderUseCase shipOrderUseCase){
+        this.payOrderUseCase = payOrderUseCase;
+        this.shipOrderUseCase = shipOrderUseCase;
     }
 
-    @PostMapping
-    public OrderResponse placeOrder(@RequestBody OrderRequest request) {
-        List<OrderItem> items = request.items().stream()
-                .map(item -> new OrderItem(
-                        new ProductId(item.productId()),
-                        item.quantity(),
-                        new Money(item.price())
-                ))
-                .collect(Collectors.toList());
+    @PostMapping("/pay")
+    public void payOrders(@Validated PayOrderRequest request){
+        payOrderUseCase.execute(new PayOrderUseCase.Command(new UserId(request.userId()), new ProductId(request.productId())));
+    }
 
-        OrderId orderId = placeOrderUseCase.execute(new PlaceOrderUseCase.Command(
+    @PostMapping("/create")
+    public CreateOrderResponse createOrder(@Validated CreateOrderRequest request){
+        OrderId orderId = shipOrderUseCase.execute(new CreateOrderUseCase.Command(
                 new UserId(request.userId()),
-                items
-        ));
-
-        return new OrderResponse(orderId.value());
+                    request.productItems.stream().map(
+                            p -> new CreateOrderUseCase.CommandComponent(new ProductId(p.productId), p.quantity)
+                    ).toList()
+                ));
+        return new CreateOrderResponse(orderId);
     }
 
-    public record OrderRequest(UUID userId, List<ItemRequest> items) {}
-    public record ItemRequest(UUID productId, int quantity, BigDecimal price) {}
-    public record OrderResponse(UUID orderId) {}
+    public record PayOrderRequest(UUID userId, UUID productId){}
+    public record CreateOrderRequest(UUID userId, List<ProductItem> productItems){}
+    public record ProductItem(UUID productId, Integer quantity){}
+    public record CreateOrderResponse(OrderId orderId){}
 }

@@ -1,11 +1,12 @@
 package com.order.infrastructure.adapters.in.rest;
 
 import com.order.application.ports.in.CreateUserUseCase;
-import com.order.application.ports.out.UserRepository;
-import com.order.domain.model.Money;
-import com.order.domain.model.User;
 import com.order.domain.model.UserId;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -13,35 +14,20 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
     private final CreateUserUseCase createUserUseCase;
-    private final UserRepository userRepository;
-
-    public UserController(CreateUserUseCase createUserUseCase, UserRepository userRepository) {
+    public UserController(CreateUserUseCase createUserUseCase){
         this.createUserUseCase = createUserUseCase;
-        this.userRepository = userRepository;
     }
 
     @PostMapping
-    public UserResponse createUser(@RequestBody UserRequest request) {
+    public UserResponse createUser(@RequestBody @Validated CreateUserRequest request){
         UserId userId = createUserUseCase.execute(new CreateUserUseCase.Command(
-                request.name(),
-                request.email(),
-                new Money(request.initialBalance())
+                request.userName(), request.initialBalance
         ));
-
         return new UserResponse(userId.value());
     }
 
-    @GetMapping("/{id}")
-    public UserDetailResponse getUser(@PathVariable UUID id) {
-        User user = userRepository.findById(new UserId(id))
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + id));
-        
-        return new UserDetailResponse(user.getId().value(), user.getName(), user.getEmail(), user.getBalance().amount());
-    }
+    public record CreateUserRequest(String userName, BigDecimal initialBalance){}
+    public record UserResponse(UUID userId){}
 
-    public record UserRequest(String name, String email, BigDecimal initialBalance) {}
-    public record UserResponse(UUID userId) {}
-    public record UserDetailResponse(UUID userId, String name, String email, BigDecimal balance) {}
 }

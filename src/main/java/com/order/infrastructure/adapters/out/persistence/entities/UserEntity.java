@@ -15,30 +15,24 @@ public class UserEntity {
     private UUID id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false, unique = true)
-    private String email;
+    private String userName;
 
     @Column(nullable = false)
     private BigDecimal balance;
 
     public UserEntity() {}
 
-    public UserEntity(UUID id, String name, String email, BigDecimal balance) {
+    public UserEntity(UUID id, String userName, BigDecimal balance) {
         this.id = id;
-        this.name = name;
-        this.email = email;
+        this.userName = userName;
         this.balance = balance;
     }
 
     // Getters and Setters
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getName() { return userName; }
+    public void setName(String name) { this.userName = name; }
     public BigDecimal getBalance() { return balance; }
     public void setBalance(BigDecimal balance) { this.balance = balance; }
 }

@@ -1,13 +1,13 @@
 package com.order.infrastructure.config;
 
-import com.order.application.ports.in.*;
-import com.order.application.ports.out.OrderEventPublisher;
-import com.order.application.ports.out.OrderRepository;
+import com.order.application.ports.in.CreateUserUseCase;
+import com.order.application.ports.in.PlaceProductUseCase;
+import com.order.application.ports.out.ProductRepository;
 import com.order.application.ports.out.UserRepository;
-import com.order.application.services.*;
-import com.order.infrastructure.adapters.out.messaging.ConsoleOrderEventPublisher;
-import com.order.infrastructure.adapters.out.persistence.PostgresOrderRepository;
-import com.order.infrastructure.adapters.out.persistence.PostgresUserRepository;
+import com.order.application.services.CreateUserService;
+import com.order.application.services.PlaceProductService;
+import com.order.infrastructure.adapters.out.persistence.ProductPersistence;
+import com.order.infrastructure.adapters.out.persistence.UserPersistence;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,46 +15,22 @@ import org.springframework.context.annotation.Configuration;
 public class OrderConfig {
 
     @Bean
-    public OrderRepository orderRepository(PostgresOrderRepository postgresOrderRepository) {
-        return postgresOrderRepository;
+    public UserRepository userRepository(UserPersistence userPersistence){
+        return userPersistence;
     }
 
     @Bean
-    public UserRepository userRepository(PostgresUserRepository postgresUserRepository) {
-        return postgresUserRepository;
+    public ProductRepository productRepository(ProductPersistence productPersistence){
+        return productPersistence;
     }
 
     @Bean
-    public OrderEventPublisher orderEventPublisher() {
-        return new ConsoleOrderEventPublisher();
+    public CreateUserUseCase createUserUseCase(CreateUserService createUserService){
+        return createUserService;
     }
 
     @Bean
-    public CreateUserUseCase createUserUseCase(UserRepository repository) {
-        return new CreateUserService(repository);
-    }
-
-    @Bean
-    public PlaceOrderUseCase placeOrderUseCase(OrderRepository orderRepository, 
-                                              UserRepository userRepository, 
-                                              OrderEventPublisher publisher) {
-        return new PlaceOrderService(orderRepository, userRepository, publisher);
-    }
-
-    @Bean
-    public PayOrderUseCase payOrderUseCase(OrderRepository orderRepository, 
-                                          UserRepository userRepository, 
-                                          OrderEventPublisher publisher) {
-        return new PayOrderService(orderRepository, userRepository, publisher);
-    }
-
-    @Bean
-    public ShipOrderUseCase shipOrderUseCase(OrderRepository repository, OrderEventPublisher publisher) {
-        return new ShipOrderService(repository, publisher);
-    }
-
-    @Bean
-    public CancelOrderUseCase cancelOrderUseCase(OrderRepository repository, OrderEventPublisher publisher) {
-        return new CancelOrderService(repository, publisher);
+    public PlaceProductUseCase placeProductUseCase(PlaceProductService placeProductService){
+        return placeProductService;
     }
 }

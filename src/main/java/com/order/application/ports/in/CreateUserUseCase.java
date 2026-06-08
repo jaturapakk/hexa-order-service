@@ -1,10 +1,10 @@
 package com.order.application.ports.in;
 
-import com.order.domain.model.Money;
 import com.order.domain.model.UserId;
+
+import java.math.BigDecimal;
 
 public interface CreateUserUseCase {
     UserId execute(Command command);
-
-    record Command(String name, String email, Money initialBalance) {}
+    record Command( String userName, BigDecimal initialBalance){}
 }
