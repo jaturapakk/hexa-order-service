@@ -1,8 +1,12 @@
 package com.order.infrastructure.adapters.out.persistence;
 
 import com.order.application.ports.out.OrderRepository;
+import com.order.domain.model.Money;
 import com.order.domain.model.Order;
 import com.order.domain.model.OrderId;
+import com.order.domain.model.OrderItem;
+import com.order.domain.model.ProductId;
+import com.order.domain.model.UserId;
 import com.order.infrastructure.adapters.out.persistence.entities.OrderEntity;
 import com.order.infrastructure.adapters.out.persistence.entities.OrderItemEntity;
 import com.order.infrastructure.adapters.out.persistence.repository.JpaOrderRepository;
