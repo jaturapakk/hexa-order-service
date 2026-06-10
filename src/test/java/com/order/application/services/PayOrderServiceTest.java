@@ -1,6 +1,7 @@
 package com.order.application.services;
 
 import com.order.application.ports.in.PayOrderUseCase;
+import com.order.application.ports.out.EventPublisher;
 import com.order.application.ports.out.OrderRepository;
 import com.order.application.ports.out.ProductRepository;
 import com.order.application.ports.out.UserRepository;
@@ -24,6 +25,7 @@ class PayOrderServiceTest {
     private UserRepository userRepository;
     private OrderRepository orderRepository;
     private ProductRepository productRepository;
+    private EventPublisher eventPublisher;
     private PayOrderService payOrderService;
 
     @BeforeEach
@@ -31,7 +33,8 @@ class PayOrderServiceTest {
         userRepository = Mockito.mock(UserRepository.class);
         orderRepository = Mockito.mock(OrderRepository.class);
         productRepository = Mockito.mock(ProductRepository.class);
-        payOrderService = new PayOrderService(userRepository, orderRepository, productRepository);
+        eventPublisher = Mockito.mock(EventPublisher.class);
+        payOrderService = new PayOrderService(userRepository, orderRepository, productRepository, eventPublisher);
     }
 
     @Test

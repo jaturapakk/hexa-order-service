@@ -4,6 +4,7 @@ import com.order.application.ports.in.CreateOrderUseCase;
 import com.order.application.ports.in.CreateUserUseCase;
 import com.order.application.ports.in.PayOrderUseCase;
 import com.order.application.ports.in.PlaceProductUseCase;
+import com.order.application.ports.out.EventPublisher;
 import com.order.application.ports.out.OrderRepository;
 import com.order.application.ports.out.ProductRepository;
 import com.order.application.ports.out.UserRepository;
@@ -54,7 +55,7 @@ public class OrderConfig {
     }
 
     @Bean
-    public PayOrderUseCase payOrderUseCase(UserRepository userRepository, OrderRepository orderRepository, ProductRepository productRepository) {
-        return new PayOrderService(userRepository, orderRepository, productRepository);
+    public PayOrderUseCase payOrderUseCase(UserRepository userRepository, OrderRepository orderRepository, ProductRepository productRepository, EventPublisher eventPublisher) {
+        return new PayOrderService(userRepository, orderRepository, productRepository, eventPublisher);
     }
 }
